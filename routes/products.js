@@ -8,8 +8,9 @@ function productsApi(app) {
   const productsService = new ProductsService();
 
   router.get('/', async function (req, res, next) {
+    const { name } = req.query;
     try {
-      const products = await productsService.getProducts(); // verificar con que reeplazar tags
+      const products = await productsService.getProducts({ name });
 
       res.status(200).json({
         data: products,
