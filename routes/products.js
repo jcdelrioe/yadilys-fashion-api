@@ -1,5 +1,13 @@
 const express = require('express');
+const joi = require('joi');
 const ProductsService = require('../services/products');
+const {
+  productIdSchema,
+  createProductSchema,
+  updateProductSchema,
+} = require('../utils/schemas/products');
+
+const validationHandler = require('../utils/middleware/validationHandler');
 
 function productsApi(app) {
   const router = express.Router();
@@ -21,68 +29,87 @@ function productsApi(app) {
     }
   });
 
-  router.get('/:productId', async function (req, res, next) {
-    const { productId } = req.params;
-    try {
-      const products = await productsService.getProduct({ productId });
+  router.get(
+    '/:productId',
+    validationHandler(joi.object({ productId: productIdSchema }), 'params'),
+    async function (req, res, next) {
+      const { productId } = req.params;
+      try {
+        const products = await productsService.getProduct({ productId });
 
-      res.status(200).json({
-        data: products,
-        message: 'product retrieved',
-      });
-    } catch (error) {
-      next(error);
+        res.status(200).json({
+          data: products,
+          message: 'product retrieved',
+        });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.post('/', async function (req, res, next) {
-    const { body: product } = req;
-    try {
-      const createProductId = await productsService.createProduct({ product });
+  router.post(
+    '/',
+    validationHandler(createProductSchema),
+    async function (req, res, next) {
+      const { body: product } = req;
+      try {
+        const createProductId = await productsService.createProduct({
+          product,
+        });
 
-      res.status(201).json({
-        data: createProductId,
-        message: 'product created',
-      });
-    } catch (error) {
-      next(error);
+        res.status(201).json({
+          data: createProductId,
+          message: 'product created',
+        });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.put('/:productId', async function (req, res, next) {
-    const { productId } = req.params;
-    const { body: product } = req;
+  router.put(
+    '/:productId',
+    validationHandler(joi.object({ productId: productIdSchema }), 'params'),
+    validationHandler(updateProductSchema),
+    async function (req, res, next) {
+      const { productId } = req.params;
+      const { body: product } = req;
 
-    try {
-      const updatedProductId = await productsService.updateProduct({
-        productId,
-        product,
-      });
+      try {
+        const updatedProductId = await productsService.updateProduct({
+          productId,
+          product,
+        });
 
-      res.status(200).json({
-        data: updatedProductId,
-        message: 'product updated',
-      });
-    } catch (error) {
-      next(error);
+        res.status(200).json({
+          data: updatedProductId,
+          message: 'product updated',
+        });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.delete('/:productId', async function (req, res, next) {
-    const { productId } = req.params;
+  router.delete(
+    '/:productId',
+    validationHandler(joi.object({ productId: productIdSchema })),
+    async function (req, res, next) {
+      const { productId } = req.params;
 
-    try {
-      const deletedProductId = await productsService.deleteProduct({
-        productId,
-      });
+      try {
+        const deletedProductId = await productsService.deleteProduct({
+          productId,
+        });
 
-      res.status(200).json({
-        data: deletedProductId,
-        message: 'product deleted',
-      });
-    } catch (error) {
-      next(error);
+        res.status(200).json({
+          data: deletedProductId,
+          message: 'product deleted',
+        });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 }
 module.exports = productsApi;
