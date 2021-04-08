@@ -1,13 +1,15 @@
 const express = require('express');
-const { productsMock } = require('../utils/mocks/products');
+const ProductsService = require('../services/products');
 
 function productsApi(app) {
   const router = express.Router();
   app.use('/api/products', router);
 
+  const productsService = new ProductsService();
+
   router.get('/', async function (req, res, next) {
     try {
-      const products = await Promise.resolve(productsMock);
+      const products = await productsService.getProducts(); // verificar con que reeplazar tags
 
       res.status(200).json({
         data: products,
@@ -19,8 +21,9 @@ function productsApi(app) {
   });
 
   router.get('/:productId', async function (req, res, next) {
+    const { productId } = req.params;
     try {
-      const products = await Promise.resolve(productsMock[0]);
+      const products = await productsService.getProduct({ productId });
 
       res.status(200).json({
         data: products,
@@ -32,8 +35,9 @@ function productsApi(app) {
   });
 
   router.post('/', async function (req, res, next) {
+    const { body: product } = req;
     try {
-      const createProductId = await Promise.resolve(productsMock[0].id);
+      const createProductId = await productsService.createProduct({ product });
 
       res.status(201).json({
         data: createProductId,
@@ -45,8 +49,14 @@ function productsApi(app) {
   });
 
   router.put('/:productId', async function (req, res, next) {
+    const { productId } = req.params;
+    const { body: product } = req;
+
     try {
-      const updatedProductId = await Promise.resolve(productsMock[0].id);
+      const updatedProductId = await productsService.updateProduct({
+        productId,
+        product,
+      });
 
       res.status(200).json({
         data: updatedProductId,
@@ -58,8 +68,12 @@ function productsApi(app) {
   });
 
   router.delete('/:productId', async function (req, res, next) {
+    const { productId } = req.params;
+
     try {
-      const deletedProductId = await Promise.resolve(productsMock[0].id);
+      const deletedProductId = await productsService.deleteProduct({
+        productId,
+      });
 
       res.status(200).json({
         data: deletedProductId,
