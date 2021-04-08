@@ -6,15 +6,26 @@ const { config } = require('./config/index');
 
 const productsApi = require('./routes/products');
 
-const { logErrors, errorHandler } = require('./utils/middleware/errorHandlers');
+const {
+  logErrors,
+  errorHandler,
+  wrapErrors,
+} = require('./utils/middleware/errorHandlers');
+
+const notFoundHandler = require('./utils/middleware/notFoundHandler');
 
 // body parser middleware
 app.use(express.json());
 
+//Routes
 productsApi(app);
 
-//Middleware de error siempre tiene que ir al final de las rutas
+//Catch Error 404
+app.use(notFoundHandler);
+
+//Erros Middleware siempre tiene que ir al final de las rutas
 app.use(logErrors);
+app.use(wrapErrors);
 app.use(errorHandler);
 
 app.listen(config.port, function () {
