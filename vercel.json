@@ -1,5 +1,4 @@
 {
-  "name": "yadilys-fashion-api",
   "version": 2,
   "builds": [
     {
@@ -14,9 +13,9 @@
     }
   ],
   "env": {
-    "DB_USER": "@yadilys_db_user",
-    "DB_PASSWORD": "yadilys_db_password",
-    "DB_HOST": "yadilys_db_host",
-    "DB_NAME": "@yadilys_db_name"
+    "DB_USER": "@yadilys-db-user",
+    "DB_PASSWORD": "@yadilys-db-password",
+    "DB_HOST": "@yadilys-db-host",
+    "DB_NAME": "@yadilys-db-name"
   }
 }
