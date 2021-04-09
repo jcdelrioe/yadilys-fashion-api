@@ -1,0 +1,22 @@
+{
+  "name": "yadilys-fashion-api",
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
+  ],
+  "env": {
+    "DB_USER": "@yadilys-db-user",
+    "DB_PASSWORD": "yadilys-db-password",
+    "DB_HOST": "yadilys-db-host",
+    "DB_NAME": "@yadilys-db-name"
+  }
+}
