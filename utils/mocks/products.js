@@ -86,11 +86,11 @@ function filteredProductsMock(name) {
 }
 
 class ProductServiceMock {
-  async getMovies() {
+  async getProducts() {
     return Promise.resolve(productsMock);
   }
 
-  async createMovie() {
+  async createProduct() {
     return Promise.resolve(productsMock[0]);
   }
 }
